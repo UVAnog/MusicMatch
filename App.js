@@ -1,21 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import * as firebase from 'firebase';
+import AuthNavigator from './screens/AuthNavigator';
+import HomeScreen from './screens/HomeScreen.js';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+var firebaseConfig = {
+  apiKey: "AIzaSyBt2sokQm6wedZP0-xuD5K-kmWfXpku6HU",
+  authDomain: "musicmatch-5b8a8.firebaseapp.com",
+  databaseURL: "https://musicmatch-5b8a8.firebaseio.com",
+  projectId: "musicmatch-5b8a8",
+  storageBucket: "musicmatch-5b8a8.appspot.com",
+  messagingSenderId: "828147726051",
+  appId: "1:828147726051:web:f5c680dca35e2ef9f2f7d6",
+  measurementId: "G-MG7HXMF3LX"
+};
+// Initialize Firebase
+if(firebase.apps.length == 0){
+  firebase.initializeApp(firebaseConfig);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      Auth: AuthNavigator,
+      App: HomeScreen,
+    },
+    {
+      initialRouteName: 'Auth'
+    }
+  )
+);
