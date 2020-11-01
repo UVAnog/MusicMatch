@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Alert,
@@ -10,16 +10,23 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Keyboard,
-  TouchableWithoutFeedback
-} from 'react-native';
-import 'firebase/firestore';
-import firebase from 'firebase';
-import * as Facebook from 'expo-facebook'
+  TouchableWithoutFeedback,
+  LinearGradient,
+} from "react-native";
+import "firebase/firestore";
+import firebase from "firebase";
+import * as Facebook from "expo-facebook";
 
 class SignUpScreen extends React.Component {
-  state = { displayName: '', email: '', password: '', errorMessage: '', loading: false };
+  state = {
+    displayName: "",
+    email: "",
+    password: "",
+    errorMessage: "",
+    loading: false,
+  };
   onLoginSuccess() {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate("App");
   }
   onLoginFailure(errorMessage) {
     this.setState({ error: errorMessage, loading: false });
@@ -28,7 +35,7 @@ class SignUpScreen extends React.Component {
     if (this.state.loading) {
       return (
         <View>
-          <ActivityIndicator size={'large'} />
+          <ActivityIndicator size={"large"} />
         </View>
       );
     }
@@ -38,41 +45,43 @@ class SignUpScreen extends React.Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(this.onLoginSuccess.bind(this))
-      .catch(error => {
-          let errorCode = error.code;
-          let errorMessage = error.message;
-          if (errorCode == 'auth/weak-password') {
-              this.onLoginFailure.bind(this)('Weak Password!');
-          } else {
-              this.onLoginFailure.bind(this)(errorMessage);
-          }
+      .catch((error) => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        if (errorCode == "auth/weak-password") {
+          this.onLoginFailure.bind(this)("Weak Password!");
+        } else {
+          this.onLoginFailure.bind(this)(errorMessage);
+        }
       });
   }
   async signInWithFacebook() {
     try {
-        //Seed documentation on course site at mobileappdev.teachable.com 
-        //For default user names and passwords. 
-        await Facebook.initializeAsync('184462529575747');
-        const {
-          type,
-          token,
-          expires,
-          permissions,
-          declinedPermissions,
-        } = await Facebook.logInWithReadPermissionsAsync({
-          permissions: ['public_profile'],
-        });
-        if (type === 'success') {
-          // Get the user's name using Facebook's Graph API
-          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-          Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
-        } else {
-          // type === 'cancel'
-        }
-      } catch ({ message }) {
-        alert(`Facebook Login Error: ${message}`);
+      //Seed documentation on course site at mobileappdev.teachable.com
+      //For default user names and passwords.
+      await Facebook.initializeAsync("184462529575747");
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile"],
+      });
+      if (type === "success") {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        );
+        Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
       }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
     }
+  }
 
   render() {
     return (
@@ -83,8 +92,8 @@ class SignUpScreen extends React.Component {
       >
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <Text style={{ fontSize: 32, fontWeight: '700', color: 'gray' }}>
-              App Name
+            <Text style={{ fontSize: 32, fontWeight: "700", color: "black" }}>
+              Music Match
             </Text>
             <View style={styles.form}>
               <TextInput
@@ -94,7 +103,7 @@ class SignUpScreen extends React.Component {
                 returnKeyType="next"
                 textContentType="name"
                 value={this.state.displayName}
-                onChangeText={displayName => this.setState({ displayName })}
+                onChangeText={(displayName) => this.setState({ displayName })}
               />
               <TextInput
                 style={styles.input}
@@ -104,7 +113,7 @@ class SignUpScreen extends React.Component {
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 value={this.state.email}
-                onChangeText={email => this.setState({ email })}
+                onChangeText={(email) => this.setState({ email })}
               />
               <TextInput
                 style={styles.input}
@@ -114,35 +123,46 @@ class SignUpScreen extends React.Component {
                 textContentType="newPassword"
                 secureTextEntry={true}
                 value={this.state.password}
-                onChangeText={password => this.setState({ password })}
+                onChangeText={(password) => this.setState({ password })}
               />
             </View>
             {this.renderLoading()}
             <Text
               style={{
                 fontSize: 18,
-                textAlign: 'center',
-                color: 'red',
-                width: '80%'
+                textAlign: "center",
+                color: "red",
+                width: "80%",
               }}
             >
               {this.state.error}
             </Text>
             <TouchableOpacity
-              style={{ width: '86%', marginTop: 10 }}
+              style={{ width: "86%", marginTop: 10 }}
               onPress={() => this.signInWithEmail()}
             >
-                <Text>Sign Up</Text>
+              <View style={styles.signUpButton}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                    color: "#000000",
+                  }}
+                >
+                  Sign Up
+                </Text>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ width: '86%', marginTop: 10 }}
-              onPress={() => this.signInWithFacebook()}>
+              style={{ width: "86%", marginTop: 10 }}
+              onPress={() => this.signInWithFacebook()}
+            >
               <View style={styles.button}>
                 <Text
                   style={{
                     letterSpacing: 0.5,
                     fontSize: 16,
-                    color: '#FFFFFF'
+                    color: "#000000",
                   }}
                 >
                   Continue with Facebook
@@ -151,9 +171,9 @@ class SignUpScreen extends React.Component {
             </TouchableOpacity>
             <View style={{ marginTop: 10 }}>
               <Text
-                style={{ fontWeight: '200', fontSize: 17, textAlign: 'center' }}
+                style={{ fontWeight: "200", fontSize: 17, textAlign: "center" }}
                 onPress={() => {
-                  this.props.navigation.navigate('SignIn');
+                  this.props.navigation.navigate("SignIn");
                 }}
               >
                 Already have an account?
@@ -168,36 +188,40 @@ class SignUpScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center'
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '86%',
-    marginTop: 15
+    width: "86%",
+    marginTop: 15,
   },
   logo: {
-    marginTop: 20
+    marginTop: 20,
   },
   input: {
     height: 48,
     borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+    overflow: "hidden",
+    backgroundColor: "white",
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 30,
     marginRight: 30,
-    paddingLeft: 16
-},
-button: {
-    backgroundColor: '#788eec',
+    paddingLeft: 16,
+  },
+  button: {
+    backgroundColor: "#9DFEB7",
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
     alignItems: "center",
-    justifyContent: 'center'
-},
+    justifyContent: "center",
+  },
+  signUpButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 export default SignUpScreen;

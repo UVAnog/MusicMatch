@@ -10,16 +10,16 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import "firebase/firestore";
 import firebase from "firebase";
-import * as Facebook from 'expo-facebook'
+import * as Facebook from "expo-facebook";
 
 class SignInScreen extends React.Component {
-  state = { email: '', password: '', errorMessage: '', loading: false };
+  state = { email: "", password: "", errorMessage: "", loading: false };
   onLoginSuccess() {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate("App");
   }
   onLoginFailure(errorMessage) {
     this.setState({ error: errorMessage, loading: false });
@@ -28,7 +28,7 @@ class SignInScreen extends React.Component {
     if (this.state.loading) {
       return (
         <View>
-          <ActivityIndicator size={'large'} />
+          <ActivityIndicator size={"large"} />
         </View>
       );
     }
@@ -38,42 +38,44 @@ class SignInScreen extends React.Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(this.onLoginSuccess.bind(this))
-      .catch(error => {
-          let errorCode = error.code;
-          let errorMessage = error.message;
-          if (errorCode == 'auth/weak-password') {
-              this.onLoginFailure.bind(this)('Weak Password!');
-          } else {
-              this.onLoginFailure.bind(this)(errorMessage);
-          }
+      .catch((error) => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        if (errorCode == "auth/weak-password") {
+          this.onLoginFailure.bind(this)("Weak Password!");
+        } else {
+          this.onLoginFailure.bind(this)(errorMessage);
+        }
       });
   }
   async signInWithFacebook() {
     try {
-        //Seed documentation on course site at mobileappdev.teachable.com 
-        //For default user names and passwords. 
-        await Facebook.initializeAsync('184462529575747');
-        const {
-          type,
-          token,
-          expires,
-          permissions,
-          declinedPermissions,
-        } = await Facebook.logInWithReadPermissionsAsync({
-          permissions: ['public_profile'],
-        });
-        if (type === 'success') {
-          // Get the user's name using Facebook's Graph API
-          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-          Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
-        } else {
-          // type === 'cancel'
-        }
-      } catch ({ message }) {
-        alert(`Facebook Login Error: ${message}`);
+      //Seed documentation on course site at mobileappdev.teachable.com
+      //For default user names and passwords.
+      await Facebook.initializeAsync("184462529575747");
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile"],
+      });
+      if (type === "success") {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        );
+        Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
       }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
     }
-  
+  }
+
   render() {
     return (
       <TouchableWithoutFeedback
@@ -83,17 +85,17 @@ class SignInScreen extends React.Component {
       >
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <Text style={{ fontSize: 32, fontWeight: "700", color: "gray" }}>
-              App Name
+            <Text style={{ fontSize: 32, fontWeight: "700", color: "black" }}>
+              Music Match
             </Text>
             <View style={styles.form}>
               <TextInput
                 style={styles.input}
                 placeholderTextColor="#aaaaaa"
                 secureTextEntry
-                placeholder='Email'
+                placeholder="Email"
                 value={this.state.email}
-                onChangeText={email => this.setState({ email })}
+                onChangeText={(email) => this.setState({ email })}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
               />
@@ -105,7 +107,7 @@ class SignInScreen extends React.Component {
                 textContentType="newPassword"
                 secureTextEntry={true}
                 value={this.state.password}
-                onChangeText={password => this.setState({ password })}
+                onChangeText={(password) => this.setState({ password })}
               />
             </View>
             {this.renderLoading()}
@@ -114,25 +116,38 @@ class SignInScreen extends React.Component {
                 fontSize: 18,
                 textAlign: "center",
                 color: "red",
-                width: "80%"
+                width: "80%",
               }}
             >
               {this.state.error}
             </Text>
             <TouchableOpacity
-              style={{ width: '86%', marginTop: 10 }}
-              onPress={() => this.signInWithEmail()}>
-                  <Text>Sign In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
               style={{ width: "86%", marginTop: 10 }}
-              onPress={() => this.signInWithFacebook()}>
+              onPress={() => this.signInWithEmail()}
+            >
+              <View style={styles.signInButton}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                    color: "#000000",
+                  }}
+                >
+                  Sign In
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{ width: "86%", marginTop: 10 }}
+              onPress={() => this.signInWithFacebook()}
+            >
               <View style={styles.button}>
                 <Text
                   style={{
                     letterSpacing: 0.5,
                     fontSize: 16,
-                    color: "#FFFFFF"
+                    color: "#000000",
                   }}
                 >
                   Continue with Facebook
@@ -159,35 +174,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   form: {
     width: "86%",
-    marginTop: 15
+    marginTop: 15,
   },
   logo: {
-    marginTop: 20
+    marginTop: 20,
   },
   input: {
     height: 48,
     borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+    overflow: "hidden",
+    backgroundColor: "white",
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 30,
     marginRight: 30,
-    paddingLeft: 16
-},
-button: {
-    backgroundColor: '#788eec',
+    paddingLeft: 16,
+  },
+  button: {
+    backgroundColor: "#9DFEB7",
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
     alignItems: "center",
-    justifyContent: 'center'
-},
+    justifyContent: "center",
+  },
+  signInButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 export default SignInScreen;
